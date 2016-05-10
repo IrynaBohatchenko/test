@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ToDo List</title>
+		<script src="js/jquery-2.2.3.min.js"></script>
+		<style>
+		* {
+			font-size: 16px;
+		}
+		body
+		{
+			background-color: #6f5499;
+			font-family: Helvetica;
+			color: #fff;
+			font-weight: bold;
+		}
+		input, select, button
+		{
+			background: none;
+			border: 3px solid #fff;
+			color: #fff;
+			font-weight: bold;
+			padding: 5px 15px;
+			-webkit-border-radius: 7px;
+			-moz-border-radius: 7px;
+			border-radius: 15px;
+			cursor: pointer;
+			margin: 0 5px;
+		}
+		table
+		{
+			width: 100%;
+			max-width: 600px;
+			border-collapse: collapse;
+			margin-top: 10px;
+		}
+		td
+		{
+			padding: 5px 7px 5px 7px;
+		}
+		tr:nth-child(odd)
+		{
+    		background-color: rgba(0,0,0,0.3);
+		}		
+		option
+		{
+			color: #000;
+		}
+		</style>
+	</head>
+
+	<body>
+
+		<button type="button" id="myB">New To Do</button>
+		<button type="button" id="clB" style="display: none">Cancel</button>
+		<div id="block1" style="display: none">
+			<form id="newForm">
+				What To Do: <input type="text" id="formText">
+				<select id="status">
+					<option value="1" selected="selected">New</option>
+					<option value="2">In Progress</option>
+					<option value="3">Complited</option>
+				</select>
+				<select id="imp">
+					<option value="1" selected="selected">Low Important</option>
+					<option value="2">Important</option>
+					<option value="3">High Important</option>
+				</select>
+				<input type="submit" id="sub" value="Write">
+			</form>
+		</div>
+
+		<table id="listOfPoints">
+		</table>
+
+		<p id="ppp"></p>
+
+		<script>
+			$("#myB").on("click", function ()
+			{
+				$("#block1").show();
+				$("#clB").show();
+			});
+
+			$("#clB").on("click", function()
+			{
+				$("#block1").hide();
+				$(this).hide();
+			});		
+
+			$("#newForm").on("submit", function (event)
+			{
+				event.preventDefault();
+				var text = $("#formText").val();
+				$("#listOfPoints").append("<tr> <td class=\"c1\">" + text + "</td><td class=\"c2\" data-val=\"" + $("#status").val() + "\">" + $("#status option:selected").text() + "</td><td class=\"c3\" data-val=\"" + $("#imp").val() + "\">" + $("#imp option:selected").text() + "</td><td class=\"c4\"><button type = \"button\" class = \"editBut\">Edit</button><button type = \"button\" class = \"delBut\">Del</button></td> </tr>");
+				$("#block1").hide();
+				$("#clB").hide();
+				$("#formText").val("");
+				$("#status").val("1");
+				$("#imp").val("1");
+			});
+
+			$(document).on("click", ".delBut", function ()
+			{
+				$(this).closest("tr").remove();
+			});
+
+			$(document).on("click", ".editBut", function ()
+			{
+				var currP = $(this).closest("tr").find(".c1").text();
+				//$("p").html(currP);
+				var currSt = $(this).closest("tr").find(".c2").attr("data-val");
+				var currIm = $(this).closest("tr").find(".c3").attr("data-val");
+				var st = "<select id = \"stat\"><option value=\"1\">New</option><option value=\"2\">In Progress</option><option value=\"3\">Complited</option></select>";
+				var im = "<select id = \"imps\"><option value=\"1\">Low Important</option><option value=\"2\">Important</option><option value=\"3\">High Important</option></select>";
+				$(this).closest("tr").html("<td class=\"c1\"><form><input type = \"text\" id = \"editForm\" value=" + currP + "></form></td><td class=\"c2\">" + st + "</td><td class=\"c3\">" + im + "<td class=\"c4\"><button type = \"button\" class = \"saveBut\">Save</button></td>");
+				$("#stat option[value=\"" + currSt + "\"]").attr('selected', 'selected');
+				$("#imps option[value=\"" + currIm + "\"]").attr('selected', 'selected');
+			});
+
+			$(document).on("click", ".saveBut", function()
+			{
+				var text = $("#editForm").val();
+				$(this).closest("tr").html("<td class=\"c1\">" + text + "</td><td class=\"c2\" data-val=\"" + $("#stat").val() + "\">" + $("#stat option:selected").text() + "</td><td class=\"c3\" data-val=\"" + $("#imps").val() + "\">" + $("#imps option:selected").text() + "</td><td class=\"c4\"><button type = \"button\" class = \"editBut\">Edit</button><button type = \"button\" class = \"delBut\">Del</button></td>");
+			});
+
+		</script>
+
+	</body>
+</html>
